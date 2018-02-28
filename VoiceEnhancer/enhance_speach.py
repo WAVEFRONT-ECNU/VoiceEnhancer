@@ -54,14 +54,14 @@ def enhance_speech(inputfile: str):
 
     # =========================    Start Processing   ===============================
     for n in range(0, Nframes):
-        # Windowing
+        # 建立窗口
         insign = win * x[k - 1:k + len_ - 1]
         # 计算帧的傅里叶变换
         spec = np.fft.fft(insign, nFFT)
         # 计算量级
         sig = abs(spec)
 
-        # save the noisy phase information
+        # 保存噪音段信息
         theta = np.angle(spec)
         SNRseg = 10 * np.log10(np.linalg.norm(sig, 2) ** 2 / np.linalg.norm(noise_mu, 2) ** 2)
 
@@ -94,7 +94,7 @@ def enhance_speech(inputfile: str):
         # 当纯净信号小于噪声信号的功率时
         diffw = sub_speech - beta * noise_mu ** Expnt
 
-        # beta negative components
+        # 负频分量(beta)
 
         def find_index(x_list):
             index_list = []
