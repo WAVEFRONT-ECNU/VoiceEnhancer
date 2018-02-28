@@ -123,12 +123,14 @@ def enhance_speech(inputfile: str):
             xfinal[k - 1:k + len2 - 1] = x_old + xi[0:len1]
             x_old = xi[0 + len1:len_]
             k = k + len2
-    # 保存文件
-    outputfile = inputfile[:-4] + "_enhanced.wav"
-    wf = wave.open(outputfile, 'wb')
-    # 设置参数
-    wf.setparams(params)
-    # 设置波形文件 .tostring()将array转换为data
-    wave_data = (winGain * xfinal).astype(np.short)
-    wf.writeframes(wave_data.tostring())
-    wf.close()
+    return params, winGain, xfinal
+
+    # # 保存文件
+    # outputfile = inputfile[:-4] + "_enhanced.wav"
+    # wf = wave.open(outputfile, 'wb')
+    # # 设置参数
+    # wf.setparams(params)
+    # # 设置波形文件 .tostring()将array转换为data
+    # wave_data = (winGain * xfinal).astype(np.short)
+    # wf.writeframes(wave_data.tostring())
+    # wf.close()
