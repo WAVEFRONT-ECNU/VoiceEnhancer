@@ -1,28 +1,17 @@
-import wave
-import numpy as np
+import librosa
+import os
+
+'''------------------------------------
+OUTPUT GENERATOR:
+    receives a destination path, file name, audio matrix, and sample rate,
+    generates a wav file based on input
+------------------------------------'''
 
 
-def save_org(inputfile: str, params, winGain, xfinal):
-    # 保存文件
-    outputfile = inputfile
-    wf = wave.open(outputfile, 'wb')
-    # 设置参数
-    wf.setparams(params)
-    # 设置波形文件 .tostring()将array转换为data
-    wave_data = (winGain * xfinal).astype(np.short)
-    wf.writeframes(wave_data.tostring())
-    wf.close()
-    return
-
-
-def save_enhanced(inputfile: str, params, winGain, xfinal):
-    # 保存文件
-    outputfile = inputfile[:-4] + "_enhanced.wav"
-    wf = wave.open(outputfile, 'wb')
-    # 设置参数
-    wf.setparams(params)
-    # 设置波形文件 .tostring()将array转换为data
-    wave_data = (winGain * xfinal).astype(np.short)
-    wf.writeframes(wave_data.tostring())
-    wf.close()
-    return
+def output_file(destination, filename, y, sr, ext=""):
+    '''------------------------------------
+    if not os.path.exists(destination):
+        os.mkdir(destination)
+    ------------------------------------'''
+    destination = destination + filename[:-4] + ext + '.wav'
+    librosa.output.write_wav(destination, y, sr)
