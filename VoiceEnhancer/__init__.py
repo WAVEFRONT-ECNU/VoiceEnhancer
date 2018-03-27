@@ -41,5 +41,60 @@ def noise_reduction(filename: str):
     save.output_file(savepath, filename, y_reduced_mfcc_up, sr, '_mfcc_up')
     save.output_file(savepath, filename, y_reduced_mfcc_down, sr, '_mfcc_down')
     save.output_file(savepath, filename, y_reduced_median, sr, '_median')
-    save.output_file(savepath, filename, y, sr, '_org')
+    # save.output_file(savepath, filename, y, sr, '_org')
+    return
+
+
+def noise_reduction_all(filename: str):
+    # reading a file
+    y, sr = read.read_file(filename)
+    y_reduced = y
+
+    # reducing noise using db power
+    y_reduced = noise_reduce.reduce_noise_power(y_reduced, sr)
+    y_reduced = noise_reduce.reduce_noise_centroid_s(y_reduced, sr)
+    y_reduced = noise_reduce.reduce_noise_centroid_mb(y_reduced, sr)
+    y_reduced = noise_reduce.reduce_noise_mfcc_up(y_reduced, sr)
+    y_reduced = noise_reduce.reduce_noise_mfcc_down(y_reduced, sr)
+    y_reduced = noise_reduce.reduce_noise_median(y_reduced, sr)
+
+    # trimming silences
+    y_reduced = noise_reduce.trim_silence(y_reduced)
+
+    # generating output file
+    savepath = ""
+
+    save.output_file(savepath, filename, y_reduced, sr, '_enhc')
+    # save.output_file(savepath, filename, y, sr, '_org')
+    return
+
+
+def noise_reduction_single_mode(filename: str, mode: str):
+    # reading a file
+    y, sr = read.read_file(filename)
+    y_reduced = y
+
+    # reducing noise using db power
+    if mode == "power":
+        y_reduced = noise_reduce.reduce_noise_power(y_reduced, sr)
+    elif mode == "centroid_s":
+        y_reduced = noise_reduce.reduce_noise_centroid_s(y_reduced, sr)
+    elif mode == "centroid_mb":
+        y_reduced = noise_reduce.reduce_noise_centroid_mb(y_reduced, sr)
+    elif mode == "mfcc_up":
+        y_reduced = noise_reduce.reduce_noise_mfcc_up(y_reduced, sr)
+    elif mode == "mfcc_down":
+        y_reduced = noise_reduce.reduce_noise_mfcc_down(y_reduced, sr)
+    elif mode == "median":
+        y_reduced = noise_reduce.reduce_noise_median(y_reduced, sr)
+
+    # trimming silences
+    y_reduced = noise_reduce.trim_silence(y_reduced)
+
+    # generating output file
+    savepath = ""
+    savename = "_" + mode
+
+    save.output_file(savepath, filename, y_reduced, sr, savename)
+    # save.output_file(savepath, filename, y, sr, '_org')
     return
